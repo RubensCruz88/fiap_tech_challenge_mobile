@@ -1,25 +1,27 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Tabs } from "expo-router";
-import React from "react";
+import { Stack } from "expo-router";
+import { AuthProvider, useAuth } from "../providers/authProvider";
 
-export default function RootLayout() {
-  return (
-    <React.Fragment>
-      <Tabs screenOptions={{headerShown: false}}>
-        <Tabs.Screen 
-          name="(home)" 
-          options={{
-            title: "Home", 
-            tabBarIcon: ({color}) => <FontAwesome size={28} name="home" color={color} />
-          }}/>
-        <Tabs.Screen 
-          name="MeusPosts"
-          options={{
-            title: "Meus Posts",
-            tabBarIcon: ({color}) => <FontAwesome size={28} name="file-text" color={color} />
-          }}
-        />
-      </Tabs>
-    </React.Fragment>
-  );
+const InitialLayout = () => {
+    const { isAuthenticated } = useAuth()
+
+    return (
+        <Stack
+            screenOptions={{headerShown: false}}
+        >
+            <Stack.Protected guard={!isAuthenticated}>
+                <Stack.Screen name="index"/>
+            </Stack.Protected>
+            <Stack.Protected guard={isAuthenticated}>
+                <Stack.Screen name="(tabs)"/>
+            </Stack.Protected>
+        </Stack>
+    )
+}
+
+export default function Layout() {
+    return (
+        <AuthProvider>
+            <InitialLayout />
+        </AuthProvider>        
+    )
 }

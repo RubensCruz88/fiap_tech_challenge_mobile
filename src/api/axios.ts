@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://172.20.163.126:3000', // Define a URL base
+  baseURL: 'https://tech-challenge-api-dzjy.onrender.com', // Define a URL base
   headers: {
     'Content-Type': 'application/json', // Define o tipo de conteúdo padrão
   },
