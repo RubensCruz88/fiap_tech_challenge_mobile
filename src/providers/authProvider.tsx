@@ -1,17 +1,20 @@
 import setLogin from '@/src/api/login';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { deleteItemAsync, getItemAsync, setItemAsync } from 'expo-secure-store';
 import { createContext, ReactNode, use, useEffect, useState } from "react";
 import api from '../api/axios';
 
-interface AuthContextType {
-    isAuthenticated: boolean;
-    logIn: (email: string, password: string) => Promise<boolean>;
-    logOut: () => Promise<void>;
+interface AuthState {
+    token: string | null,
+    authenticated: boolean;
+    email: string;
+    id: string;
+    tipo: string;
 }
 
-interface AuthState {
-    token: string | null;
-    authenticated: boolean;
+interface AuthContextType {
+    authState: AuthState;
+    logIn: (email: string, password: string) => Promise<boolean>;
+    logOut: () => Promise<void>;
 }
 
 const TOKEN_KEY = 'eduPost'
@@ -27,21 +30,24 @@ export function useAuth() {
 }
 
 export const AuthProvider = ({children}: {children: ReactNode}) => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false)
     const [loading,setLoading] = useState(false)
     const [authState, setAuthState] = useState<AuthState>({
         token: null,
-        authenticated: false
+        authenticated: false,
+        email: '',
+        id: '',
+        tipo: ''
     })
 
     useEffect(() => {
         const loadAuthState = async () => {
             try {
-                const token = await AsyncStorage.getItem(TOKEN_KEY);
+                const storeToken = await getItemAsync(TOKEN_KEY);
+                if(storeToken) {
+                    const jsonToken: AuthState = JSON.parse(storeToken)
 
-                if(token) {
-                    setIsAuthenticated(true)
-                    api.defaults.headers.common['Authorization'] = `Bearer ${token}`
+                    setAuthState(jsonToken)
+                    api.defaults.headers.common['Authorization'] = `Bearer ${jsonToken.token}`
                 }
 
             } catch (err) {
@@ -57,8 +63,16 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
         const response = await setLogin(email,password)
 
         if(response) {
-            await AsyncStorage.setItem(TOKEN_KEY,response.token)
-            setIsAuthenticated(true)
+            const authenticatedData = {
+                token: response.token,
+                authenticated: true,
+                email: response.usuario.email,
+                id: response.usuario.id,
+                tipo: response.usuario.tipo
+            }
+            await setItemAsync(TOKEN_KEY,JSON.stringify(authenticatedData))
+            setAuthState(authenticatedData)
+
             api.defaults.headers.common['Authorization'] = `Bearer ${response.token}`
 
             return true
@@ -68,13 +82,19 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
     }
 
     const logOut = async () => {
-        await AsyncStorage.removeItem(TOKEN_KEY)
-        setIsAuthenticated(false)
+        await deleteItemAsync(TOKEN_KEY)
+        setAuthState({
+            token: null,
+            authenticated: false,
+            email: '',
+            id: '',
+            tipo: ''
+        })
         api.defaults.headers.common['Authorization'] = ''
     }
 
     return (
-        <AuthContext.Provider value={{isAuthenticated, logIn, logOut}} >
+        <AuthContext.Provider value={{authState, logIn, logOut}} >
             {children}
         </AuthContext.Provider>
     )

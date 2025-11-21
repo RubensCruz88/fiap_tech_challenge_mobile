@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { Button, StyleSheet, TextInput, View } from "react-native";
+import Toast from 'react-native-toast-message';
 import { useAuth } from '../providers/authProvider';
 
 export default function Login() {
@@ -8,12 +9,17 @@ export default function Login() {
     const [email, onChangeEmail] = useState('')
     const [password, onChangePassword] = useState('')
 
-
     const onButtonPress = async () => {
        const retorno = await logIn(email,password)
 
        if(!retorno) {
-            alert('E-mail ou senha inválidos')
+            Toast.show({
+                type: "error",
+                text1: 'Usuário ou senha inválidos',
+                text1Style: {
+                    fontSize: 15
+                }
+            })
        }
     }
 

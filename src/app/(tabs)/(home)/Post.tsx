@@ -18,8 +18,6 @@ export default function PostDetail() {
 
     useEffect(() => {
         fetchData()
-
-        console.log(post)
     },[])
 
     async function fetchData() {
