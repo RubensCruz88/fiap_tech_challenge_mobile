@@ -1,21 +1,12 @@
-import getPosts from "@/src/api/getPosts";
 import PostItem from "@/src/components/PostItem";
-import { useAuth } from "@/src/providers/authProvider";
+import { PostListModel } from '@/src/models/Post/postList.model';
+import PostsSercice from '@/src/services/posts.service';
 import { useEffect, useState } from "react";
-import { Button, FlatList } from "react-native";
+import { FlatList } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
-interface PostList {
-    id: string;
-	titulo: string;
-	autor: string;
-    createdAt: string;
-    updatedAt: string;
-}
-
 export default function Home() {
-    const { logOut } = useAuth();
-    const [posts, setPosts] = useState<PostList[]>([])
+    const [posts, setPosts] = useState<PostListModel[]>([])
 
     useEffect(() => {
         fetchData()
@@ -23,7 +14,7 @@ export default function Home() {
 
     async function fetchData() {
         try {
-            const postList = await getPosts();
+            const postList = await PostsSercice.getPosts();
             if(postList){
                 setPosts(postList)
             }
@@ -32,14 +23,9 @@ export default function Home() {
         }
     }
 
-    async function logout() {
-        logOut()
-    }
-    
     return (
         <SafeAreaProvider>
             <SafeAreaView>
-                <Button title="Logout" onPress={logout}></Button>
                 <FlatList 
                     data={posts}
                     keyExtractor={(post) => post.id}
