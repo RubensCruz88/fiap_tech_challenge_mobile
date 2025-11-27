@@ -1,6 +1,8 @@
 
+import Logo from '@/assets/images/logo.png';
+import { Image } from "expo-image";
 import { useState } from "react";
-import { Button, StyleSheet, TextInput, View } from "react-native";
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from 'react-native-toast-message';
 import { useAuth } from '../providers/authProvider';
 
@@ -25,10 +27,15 @@ export default function Login() {
 
     return (
         <View style={styles.container}>
+            <Image
+                source={Logo}
+                style={styles.logo}
+            />
             <View style={styles.form}>
                 <TextInput 
                     style={styles.input}
                     placeholder="Email"
+					autoCapitalize="none"
                     onChangeText={onChangeEmail}
                     value={email}
                 />
@@ -39,10 +46,9 @@ export default function Login() {
                     onChangeText={onChangePassword}
                     value={password}
                 />
-                <Button 
-                    title="Login" 
-                    onPress={onButtonPress}
-                />
+                <TouchableOpacity style={styles.button} onPress={onButtonPress}>
+					<Text style={styles.buttonText}>Login</Text>
+				</TouchableOpacity>
             </View>
         </View>
     )
@@ -53,7 +59,14 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        width: '100%'
+        width: '100%',
+        backgroundColor: '#E9F5EC',
+        gap: 50
+    },
+    logo: {
+        alignSelf: 'center',
+        width: 120,
+        height: 120
     },
     form: {
         gap: 10,
@@ -64,6 +77,19 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 4,
         padding: 10,
-        backgroundColor: '#FFF'
-    }
+        borderColor: '#A9DFBF',
+        backgroundColor: '#F9F9F9'
+    },
+    button: {
+		backgroundColor: "#1E8449",
+		paddingVertical: 14,
+		borderRadius: 10,
+		marginTop: 24,
+		alignItems: "center",
+	},
+	buttonText: {
+		color: "#FFF",
+		fontSize: 16,
+		fontWeight: "700",
+	}
 })

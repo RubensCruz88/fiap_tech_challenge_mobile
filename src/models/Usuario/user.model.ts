@@ -1,7 +1,7 @@
-import { UserListResponse } from "@/src//services/types/UsersResponse";
+import { UserListResponse } from "@/src/services/types/Users.type";
 import { jsonToDate } from "@/src/utils/dateFnsUtils";
 
-export class UserListModel {
+export class UserModel {
     id: string;
     nome: string;
     email: string;

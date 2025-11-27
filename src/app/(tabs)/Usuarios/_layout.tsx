@@ -1,10 +1,19 @@
 import { Stack } from "expo-router";
 
 export default function Layout() {
-    return <Stack screenOptions={{
-        headerShown: false
-    }}>
-        <Stack.Screen name="index"/>
-        <Stack.Screen name="User"/>
-    </Stack>
+	return (
+		<Stack screenOptions={{
+			headerStyle: {
+				backgroundColor: '#FFF'
+			},
+			headerTintColor: '#1E8449',
+			
+		}}>
+			<Stack.Screen name="index" options={{headerShown: false}}/>
+			<Stack.Screen name="User"/>
+			<Stack.Screen name="Novo" options={{
+				headerTitle: "Voltar"
+			}}/>
+		</Stack>
+	)
 }

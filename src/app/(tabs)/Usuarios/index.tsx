@@ -1,17 +1,21 @@
 import UserItem from '@/src/components/UserItem';
-import { UserModel } from '@/src/models/user.model';
+import { UserModel } from '@/src/models/Usuario/user.model';
 import UserService from '@/src/services/users.service';
-import { useEffect, useState } from "react";
+import { useFocusEffect } from '@react-navigation/native';
+import { Link } from 'expo-router';
+import { useCallback, useState } from "react";
 import { Button, FlatList } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function Usuarios() {
 	const [users, setUsers] = useState<UserModel[]>([])
 
-	useEffect(() => {
-			fetchData()
-		},[])
-	
+	useFocusEffect(
+		useCallback(() => {
+			fetchData();
+		}, [])
+	);
+
 	async function fetchData() {
 		try {
 			const usersList = await UserService.getUsers();
@@ -31,7 +35,9 @@ export default function Usuarios() {
 	return(
 		<SafeAreaProvider style={{marginTop: 50}}>
 			<SafeAreaView>
-				<Button title="Novo Usuário" onPress={() => newUser()}></Button>
+				<Link href={"/(tabs)/Usuarios/Novo"} asChild>
+					<Button title="Novo Usuário" onPress={() => newUser()}></Button>
+				</Link>
 				<FlatList 
 					data={users}
 					keyExtractor={(user) => user.id}
