@@ -34,7 +34,13 @@ export default function NovoUsuario() {
 			navigation.goBack()
 
 		} catch (err) {
-			console.log('err',err)
+			Toast.show({
+				type: "error",
+				text1: `Erro ao criar usuário`,
+				text1Style: {
+					fontSize: 15
+				}
+			})
 		}
 	}
 
@@ -86,7 +92,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		width: '100%',
-		backgroundColor: '#E9F5EC'
+		backgroundColor: '#B5D195'
 	},
 	form: {
 		gap: 10,

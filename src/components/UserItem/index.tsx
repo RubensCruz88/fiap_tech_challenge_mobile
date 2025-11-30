@@ -1,103 +1,57 @@
-import { UserListModel } from "@/src/models/Usuario/user.model";
-import { dateToString } from "@/src/utils/dateFnsUtils";
+import { UserModel } from "@/src/models/Usuario/user.model";
 import { Link } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface UserProps {
-    user: UserListModel
+    user: UserModel
 }
 
 export default function UserItem({user}: UserProps) {
-  const tagStyle: Record<string, any> = {
-    admin: tagStyles.tagAdmin,
-    professor: tagStyles.tagProfessor,
-    aluno: tagStyles.tagAluno,
-  };
-
   return(
-    <Link href={{pathname: "/Usuarios/User"}} asChild>
+    <Link href={{
+      pathname: '/Usuarios/[userId]',
+      params: {userId: user.id}
+    }} asChild>
       <TouchableOpacity>
-        <View style={styles.itemContainer}>
-          <View style={styles.header}>
-            <Text style={styles.name}>{user.nome}</Text>
-            <View style={[tagStyles.tag,tagStyle[user.tipo]]}>
-              <Text style={styles.tagText}>{user.tipo}</Text>
-            </View>
-          </View>
-
-          <Text style={styles.email}>{user.email}</Text>
-
-          <Text style={styles.date}>
-              Criado em: {dateToString(user.createdAt,"dd/MM/yyyy HH:mm")}
-          </Text>
-        </View>
+		<View style={styles.container}>
+			<Text style={styles.itemNome}>{user.nome}</Text>
+			<Text style={styles.itemEmail}>{user.email}</Text>
+			<Text style={styles.itemTipo}>Tipo: {user.tipo}</Text>
+		</View>
       </TouchableOpacity>
     </Link>
   )
 }
 
 export const styles = StyleSheet.create({
-  itemContainer: {
-    backgroundColor: "#FFFFFF",
-    padding: 16,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#E6E8EC",
-    marginVertical: 8,
-  },
+	container: {
+		backgroundColor: "#FFF",
+		padding: 16,
+		borderRadius: 12,
+		marginBottom: 12,
+		borderLeftWidth: 6,
+		borderLeftColor: "#1E8449", // barra verde lateral
+		shadowColor: "#000",
+		shadowOpacity: 0.08,
+		shadowRadius: 5,
+		elevation: 2,
+	},
+	itemNome: {
+		fontSize: 18,
+		fontWeight: "700",
+		color: "#145A32",
+		marginBottom: 4,
+	},
 
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
+	itemEmail: {
+		fontSize: 14,
+		color: "#2F4F4F",
+		marginBottom: 4,
+	},
 
-  name: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#2C2C2C",
-  },
-
-  email: {
-    fontSize: 14,
-    marginTop: 6,
-    color: "#6B6B6B",
-  },
-  tagText: {
-    fontSize: 12,
-    fontWeight: "700",
-    color: "#2C2C2C",
-  },
-
-  date: {
-    marginTop: 10,
-    fontSize: 12,
-    color: "#8A8A8A",
-  },
-});
-
-const tagStyles = StyleSheet.create({
-  tag: {
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 8,
-  },
-
-  tagAdmin: {
-    backgroundColor: "#D9534F",
-  },
-
-  tagProfessor: {
-    backgroundColor: "#0275D8",
-  },
-
-  tagAluno: {
-    backgroundColor: "#5CB85C",
-  },
-
-  tagText: {
-    color: "#fff",
-    fontWeight: "bold",
-    textTransform: "capitalize"
-  }
-});
+	itemTipo: {
+		fontSize: 13,
+		color: "#1E8449",
+		fontWeight: "600",
+	},
+})

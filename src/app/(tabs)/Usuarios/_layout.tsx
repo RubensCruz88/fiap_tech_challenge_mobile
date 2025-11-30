@@ -10,7 +10,7 @@ export default function Layout() {
 			
 		}}>
 			<Stack.Screen name="index" options={{headerShown: false}}/>
-			<Stack.Screen name="User"/>
+			<Stack.Screen name="[userId]" options={{ headerTitle: "Voltar"}}/>
 			<Stack.Screen name="Novo" options={{
 				headerTitle: "Voltar"
 			}}/>

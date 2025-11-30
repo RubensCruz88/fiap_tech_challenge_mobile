@@ -16,14 +16,26 @@ class UserService {
         return []
     }
 
-    async createUser(userData: CreateUserBody) {
-        const response: AxiosResponse<UserDetailResponse> = await api.post('usuarios',userData)
+    async getUserData(userId: string) {
+        const response: AxiosResponse<UserListResponse> = await api.get(`usuarios/${userId}`)
 
         if(response.data) {
-            return new UserModel(response.data)
+            const formattedData = new UserModel(response.data)
+
+            return formattedData
         }
 
         return null
+    }
+
+    async createUser(userData: CreateUserBody) {
+            const response: AxiosResponse<UserDetailResponse> = await api.post('usuarios',userData)
+
+            if(response.data) {
+                return new UserModel(response.data)
+            }
+
+            return null
     }
 }
 
