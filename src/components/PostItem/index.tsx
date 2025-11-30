@@ -8,55 +8,104 @@ interface PostProps {
 }
 
 export default function PostItem({post}: PostProps) {
-    return(
-        <Link href={{pathname: "/Post", params: {postId: post.id}}} asChild>
-            <TouchableOpacity style={styles.container}>
-                <View style={styles.item}>
-                    <Text style={styles.titulo}>{post.titulo}</Text>
-                    <Text style={styles.autor}>Autor: {post.autor}</Text>
-                    <Text style={styles.createdAt}>
-                        Criado em: {dateToString(post.createdAt,"dd/MM/yyyy HH:mm")}
-                    </Text>
-                </View>
-            </TouchableOpacity>
-        </Link>
+	return(
+		<View style={styles.card}>
+			<View style={styles.cabecalho}>
+				<Text style={styles.cabecalhoTitulo}>{post.titulo}</Text>
+			</View>
+		
+			<View style={styles.autorContainer}>
+				<Text style={styles.autorIcone}>✍️</Text>
+				<Text style={styles.autorNome}>{post.autor}</Text>
+			</View>
+		
+			<View style={styles.criadoEmContainer}>
+				<Text style={styles.criadoEmTitulo}>Criado em</Text>
+				<Text style={styles.criadoEmData}>
+					{dateToString(post.createdAt,"dd 'de' MMMM 'de' yyyy 'as' HH:mm")}
+				</Text>
+			</View>
+			
+			<Link href={{pathname: "/Post", params: {postId: post.id}}} asChild>
+				<TouchableOpacity style={styles.botaoContainer}>
+					<Text style={styles.botaoTexto}>Ler Post</Text>
+				</TouchableOpacity>
+			</Link>
+		</View>
     )
 }
 
-export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#F5F5F5",
-    padding: 16,
-  },
-
-  item: {
-    backgroundColor: "#FFF",
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 12,
-    shadowColor: "#000",
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-
-  titulo: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "#333",
-    marginBottom: 4,
-  },
-
-  autor: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: "#666",
-    marginBottom: 6,
-  },
-
-  createdAt: {
-    fontSize: 12,
-    color: "#999",
-  }
-});
+const styles = StyleSheet.create({
+	card: {
+		backgroundColor: "#fff",
+		padding: 18,
+		borderRadius: 16,
+		borderWidth: 1,
+		borderColor: "#C8E6C9",
+		elevation: 3,
+		shadowColor: "#000",
+		shadowOpacity: 0.1,
+		shadowRadius: 4,
+		shadowOffset: { width: 0, height: 2 },
+	},
+	cabecalho: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center",
+		marginBottom: 12,
+	},
+	cabecalhoTitulo: {
+		fontSize: 20,
+		fontWeight: "bold",
+		color: "#145A32",
+		flex: 1,
+		paddingRight: 12,
+	},
+	autorContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+		marginBottom: 12,
+	},
+	autorIcone: {
+		fontSize: 18,
+		marginRight: 6,
+	},
+	autorNome: {
+		fontSize: 16,
+		color: "#1E8449",
+		fontWeight: "600",
+	},
+	criadoEmContainer: {
+		borderLeftWidth: 3,
+		borderLeftColor: "#2E7D32", // verde principal
+		paddingLeft: 10,
+		marginTop: 10,
+		marginBottom: 8,
+	},
+	criadoEmTitulo: {
+		fontSize: 12,
+		fontWeight: "600",
+		color: "#1B5E20", // verde mais escuro
+		opacity: 0.9,
+		marginBottom: 2,
+	},
+	criadoEmData: {
+		fontSize: 15,
+		fontWeight: "500",
+		color: "#444",
+		textTransform: "capitalize", // "nov" → "Nov"
+	},
+	botaoContainer: {
+		marginTop: 14,
+		borderWidth: 2,
+		borderColor: "#1E8449",
+		paddingVertical: 10,
+		borderRadius: 10,
+		alignItems: "center",
+	},
+	botaoTexto: {
+		color: "#1E8449",
+		fontWeight: "bold",
+		fontSize: 16,
+	},
+})
