@@ -5,3 +5,12 @@ export interface PostListResponse {
 	autor: string;
 	titulo: string;
 }
+
+export interface PostDetailResponse {
+	id: string;
+	autor: string;
+	titulo: string;
+	conteudo: string;
+	createdAt: string;
+	updatedAt: string;
+}

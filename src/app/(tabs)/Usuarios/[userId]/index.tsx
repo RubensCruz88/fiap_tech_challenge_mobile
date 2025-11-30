@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		width: '100%',
-		backgroundColor: '#E9F5EC'
+		backgroundColor: '#B5D195'
 	},
 	form: {
 		gap: 10,

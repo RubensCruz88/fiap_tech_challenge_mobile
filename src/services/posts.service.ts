@@ -1,7 +1,9 @@
 import api from "@/src/api/axios";
 import { AxiosResponse } from "axios";
+import { PostDetailModel } from "../models/Post/postDetail.model";
 import { PostListModel } from "../models/Post/postList.model";
-import { PostListResponse } from "./types/PostsResponse";
+import { PostDetailResponse, PostListResponse } from "./types/PostsResponse";
+
 
 class PostService {
     async getPosts() {
@@ -14,6 +16,16 @@ class PostService {
         }
 
         return []
+    }
+
+    async getPostDetail(postId: string) {
+        const response: AxiosResponse<PostDetailResponse> = await api.get(`posts/${postId}`);
+
+        if(response.data) {
+            return new PostDetailModel(response.data)
+        }
+
+        return null
     }
 }
 
