@@ -8,7 +8,7 @@ export default function RootLayout() {
 
   return (
     <React.Fragment>
-      <Tabs screenOptions={{headerShown: false}}>
+      <Tabs screenOptions={{headerShown: false, tabBarActiveTintColor: '#1E8449'}}>
         <Tabs.Screen 
           name="(home)" 
           options={{

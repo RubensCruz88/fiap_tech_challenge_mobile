@@ -47,7 +47,7 @@ export default function Login() {
                     value={password}
                 />
                 <TouchableOpacity style={styles.button} onPress={onButtonPress}>
-					<Text style={styles.buttonText}>Login</Text>
+					<Text style={styles.buttonText}>Entrar</Text>
 				</TouchableOpacity>
             </View>
         </View>

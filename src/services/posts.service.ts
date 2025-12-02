@@ -6,27 +6,39 @@ import { PostDetailResponse, PostListResponse } from "./types/PostsResponse";
 
 
 class PostService {
-    async getPosts() {
-        const response: AxiosResponse<PostListResponse[]> = await api.get(`posts`);
+	async getPosts() {
+		const response: AxiosResponse<PostListResponse[]> = await api.get(`posts`);
 
-        if(response.data) {
-            const formattedData = response.data.map(post => new PostListModel(post));
+		if(response.data) {
+			const formattedData = response.data.map(post => new PostListModel(post));
 
-            return formattedData
-        }
+			return formattedData
+		}
 
-        return []
-    }
+		return []
+	}
 
-    async getPostDetail(postId: string) {
-        const response: AxiosResponse<PostDetailResponse> = await api.get(`posts/${postId}`);
+	async getPostsByUser() {
+		const response: AxiosResponse<PostListResponse[]> = await api.get(`posts/meusPosts`);
 
-        if(response.data) {
-            return new PostDetailModel(response.data)
-        }
+		if(response.data) {
+			const formattedData = response.data.map(post => new PostListModel(post));
 
-        return null
-    }
+			return formattedData
+		}
+
+		return []
+	}
+
+	async getPostDetail(postId: string) {
+		const response: AxiosResponse<PostDetailResponse> = await api.get(`posts/${postId}`);
+
+		if(response.data) {
+			return new PostDetailModel(response.data)
+		}
+
+		return null
+	}
 }
 
 export default new PostService();

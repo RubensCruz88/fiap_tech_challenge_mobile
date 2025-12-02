@@ -1,6 +1,6 @@
 import PostItem from '@/src/components/PostItem';
 import { PostListModel } from '@/src/models/Post/postList.model';
-import PostsSercice from '@/src/services/posts.service';
+import PostsService from '@/src/services/posts.service';
 import { useEffect, useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
@@ -14,7 +14,7 @@ export default function Home() {
 
     async function fetchData() {
         try {
-            const postList = await PostsSercice.getPosts();
+            const postList = await PostsService.getPosts();
             if(postList){
                 setPosts(postList)
             }
