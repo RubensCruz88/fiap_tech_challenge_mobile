@@ -14,3 +14,8 @@ export interface PostDetailResponse {
 	createdAt: string;
 	updatedAt: string;
 }
+
+export interface CreatePostBody {
+	titulo: string;
+	conteudo: string;
+}

@@ -2,16 +2,19 @@ import UserPostItem from "@/src/components/UserPostItem";
 import { PostListModel } from "@/src/models/Post/postList.model";
 import PostService from '@/src/services/posts.service';
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { useEffect, useState } from "react";
+import { router, useFocusEffect } from "expo-router";
+import { useCallback, useState } from "react";
 import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function MeusPosts() {
 	const [posts, setPosts] = useState<PostListModel[]>([])
 
-	useEffect(() => {
-		fetchData()
-	},[])
+	useFocusEffect(
+		useCallback(() => {
+			fetchData();
+		}, [])
+	);
 
 	async function fetchData() {
 		try {
@@ -19,28 +22,35 @@ export default function MeusPosts() {
 			if(postList){
 				setPosts(postList)
 			}
-		} catch(error) {
-			console.log("erro",error)
+		} catch(err) {
+			console.log("erro",err)
 		}
+	}
+
+	async function onAddPost() {
+		router.push('/(tabs)/MeusPosts/NovoPost')
+	}
+
+	async function onDeletePost() {
+		fetchData()
 	}
 
 	return(
 		<SafeAreaProvider>
 			<SafeAreaView style={styles.container}>
-				<TouchableOpacity style={styles.fab}>
+				<TouchableOpacity style={styles.fab} onPress={onAddPost}>
 					<FontAwesome name="plus" size={22} color="#fff" />
 				</TouchableOpacity>
 				<FlatList 
 					data={posts}
 					keyExtractor={(post) => post.id}
-					renderItem={({item}) => <UserPostItem post={item}></UserPostItem>}
+					renderItem={({item}) => <UserPostItem post={item} onDelete={onDeletePost}></UserPostItem>}
 					contentContainerStyle={styles.listContainer}
 				/>
 			</SafeAreaView>
 		</SafeAreaProvider>
 	)
 }
-
 
 const styles = StyleSheet.create({
 	fab: {
@@ -53,12 +63,13 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         alignItems: "center",
         justifyContent: "center",
-        elevation: 6, 
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.3,
         shadowRadius: 3,
-    },
+		zIndex: 999,
+		elevation: 6, 
+	},
 	container: {
 		flex: 1,
 		padding: 20,

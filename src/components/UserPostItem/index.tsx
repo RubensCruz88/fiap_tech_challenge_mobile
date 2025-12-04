@@ -1,45 +1,74 @@
 import { PostListModel } from "@/src/models/Post/postList.model";
+import postsService from "@/src/services/posts.service";
 import { dateToString } from "@/src/utils/dateFnsUtils";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
+import { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import DeletePostModal from "../DeletePostModal";
 
 interface PostProps {
-    post: PostListModel
+    post: PostListModel;
+	onDelete: () => void;
 }
 
-export default function UserPostItem({post}: PostProps) {
+export default function UserPostItem({post, onDelete}: PostProps) {
+	const [showConfirm, setShowConfirm] = useState(false);
+
+	function showConfirmModal() {
+		setShowConfirm(true)
+	}
+
+	function onShowPost() {
+		router.push(`/(tabs)/(home)/${post.id}`)
+	}
+
+	async function onDeletePost() {
+		try {
+			await postsService.deletePost(post.id)
+
+			setShowConfirm(false)
+			onDelete()
+
+		} catch (err) {
+			console.log(err)
+		}
+	}
+
 	return(
-		<View style={styles.card}>
-			<View style={styles.cabecalho}>
-				<Text style={styles.cabecalhoTitulo}>{post.titulo}</Text>
-			</View>
-		
-			<View style={styles.criadoEmContainer}>
-				<Text style={styles.criadoEmTitulo}>Criado em</Text>
-				<Text style={styles.criadoEmData}>
-					{dateToString(post.createdAt,"dd 'de' MMMM 'de' yyyy 'as' HH:mm")}
-				</Text>
-			</View>
+		<>
+			<DeletePostModal
+				visible={showConfirm}
+				onCancel={() => setShowConfirm(false)}
+				onConfirm={onDeletePost}
+			/>
+			<View style={styles.card}>
+				<View style={styles.cabecalho}>
+					<Text style={styles.cabecalhoTitulo}>{post.titulo}</Text>
+				</View>
 			
-			<View style={styles.grupoBotoes}>
-				<Link href={{pathname: "./(home)/[postId]", params: {postId: post.id}}} asChild>
-					<TouchableOpacity style={styles.botaoContainerLer}>
-						<FontAwesome name="book" size={28} color="#FFF" />
+				<View style={styles.criadoEmContainer}>
+					<Text style={styles.criadoEmTitulo}>Criado em</Text>
+					<Text style={styles.criadoEmData}>
+						{dateToString(post.createdAt,"dd 'de' MMMM 'de' yyyy 'as' HH:mm")}
+					</Text>
+				</View>
+				
+				<View style={styles.grupoBotoes}>
+					<TouchableOpacity style={styles.botaoContainerLer} onPress={onShowPost}>
+						<FontAwesome name="book" size={22} color="#FFF" />
 					</TouchableOpacity>
-				</Link>
-				<Link href={{pathname: "./(home)/[postId]", params: {postId: post.id}}} asChild>
-					<TouchableOpacity style={styles.botaoContainerEditar}>
-						<FontAwesome name="edit" size={28} color="#FFF" />
+					<Link href={{pathname: "./(home)/[postId]", params: {postId: post.id}}} asChild>
+						<TouchableOpacity style={styles.botaoContainerEditar}>
+							<FontAwesome name="edit" size={22} color="#FFF" />
+						</TouchableOpacity>
+					</Link>
+					<TouchableOpacity style={styles.botaoContainerExcluir} onPress={showConfirmModal}>
+						<FontAwesome name="trash" size={22} color="#FFF" />
 					</TouchableOpacity>
-				</Link>
-				<Link href={{pathname: "./(home)/[postId]", params: {postId: post.id}}} asChild>
-					<TouchableOpacity style={styles.botaoContainerExcluir}>
-						<FontAwesome name="trash" size={28} color="#FFF" />
-					</TouchableOpacity>
-				</Link>
+				</View>
 			</View>
-		</View>
+		</>
 	)
 }
 
@@ -96,41 +125,30 @@ const styles = StyleSheet.create({
 	},
 	grupoBotoes: {
 		flexDirection: 'row',
+		justifyContent: 'space-evenly',
 		marginTop: 14,
-		gap: 10
+		height: 30
 	},
 	botaoContainerLer: {
-		flex: 1,
-    height: 48,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 12,
-    backgroundColor: "#2E7D32", // verde médio sólido
+		justifyContent: "center",
+		alignItems: "center",
+		borderRadius: 12,
+		backgroundColor: "#2E7D32",
+		width: 70
 },
 	botaoContainerEditar: {
-		flex: 1,
-    height: 48,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 12,
-    backgroundColor: "#1B5E20", // verde escuro sólido
-},
-	botaoContainerExcluir: {
-		flex: 1,
-    height: 48,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 12,
-    backgroundColor: "#C62828", // vermelho forte sólido
-},
-	botaoContainer: {
-		flex: 1,
-		borderWidth: 2,
-		borderColor: "#1E8449",
-		borderRadius: 10,
+		justifyContent: "center",
 		alignItems: "center",
-		justifyContent: 'center',
-		height: 48
+		borderRadius: 12,
+		backgroundColor: "#1B5E20",
+		width: 70
+	},
+	botaoContainerExcluir: {
+		justifyContent: "center",
+		alignItems: "center",
+		borderRadius: 12,
+		backgroundColor: "#C62828",
+		width: 70
 	},
 	botaoTexto: {
 		color: "#1E8449",

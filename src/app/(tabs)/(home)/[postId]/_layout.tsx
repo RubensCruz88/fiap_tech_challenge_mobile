@@ -8,7 +8,7 @@ export default function Layout() {
 				headerStyle: {
 					backgroundColor: '#FFF'
 				},
-				headerTintColor: '#1E8449',
+				headerTintColor: '#1E8449'
 			}}
 		/>
 	)

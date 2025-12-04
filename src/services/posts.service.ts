@@ -2,7 +2,7 @@ import api from "@/src/api/axios";
 import { AxiosResponse } from "axios";
 import { PostDetailModel } from "../models/Post/postDetail.model";
 import { PostListModel } from "../models/Post/postList.model";
-import { PostDetailResponse, PostListResponse } from "./types/PostsResponse";
+import { CreatePostBody, PostDetailResponse, PostListResponse } from "./types/PostsResponse";
 
 
 class PostService {
@@ -36,6 +36,23 @@ class PostService {
 		if(response.data) {
 			return new PostDetailModel(response.data)
 		}
+
+		return null
+	}
+
+	async addPost(postData: CreatePostBody) {
+		const response: AxiosResponse<PostDetailResponse> = await api.post(`posts`,postData)
+
+		if(response.data) {
+			return new PostDetailModel(response.data)
+		}
+
+		return null
+
+	}
+
+	async deletePost(postId: string) {
+		await api.delete(`posts/${postId}`)
 
 		return null
 	}
