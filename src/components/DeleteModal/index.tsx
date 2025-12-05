@@ -1,16 +1,18 @@
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-interface DeletePostModalProps {
+interface DeleteModalProps {
+    message: string;
     visible: boolean;
     onCancel: () => void;
     onConfirm: () => void;
 }
 
-export default function DeletePostModal({
+export default function DeleteModal({
+    message,
     visible,
     onCancel,
     onConfirm
-}: DeletePostModalProps) {
+}: DeleteModalProps) {
 
     return (
         <Modal
@@ -22,7 +24,7 @@ export default function DeletePostModal({
                 <View style={styles.container}>
                     
                     <Text style={styles.title}>Confirmar Ação</Text>
-                    <Text style={styles.message}>Tem certeza que deseja excluir este Post?</Text>
+                    <Text style={styles.message}>{message}</Text>
 
                     <View style={styles.buttons}>
                         <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>

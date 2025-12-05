@@ -5,7 +5,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Link, router } from "expo-router";
 import { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import DeletePostModal from "../DeletePostModal";
+import DeleteModal from "../DeleteModal";
 
 interface PostProps {
     post: PostListModel;
@@ -14,10 +14,6 @@ interface PostProps {
 
 export default function UserPostItem({post, onDelete}: PostProps) {
 	const [showConfirm, setShowConfirm] = useState(false);
-
-	function showConfirmModal() {
-		setShowConfirm(true)
-	}
 
 	function onShowPost() {
 		router.push(`/(tabs)/(home)/${post.id}`)
@@ -37,7 +33,8 @@ export default function UserPostItem({post, onDelete}: PostProps) {
 
 	return(
 		<>
-			<DeletePostModal
+			<DeleteModal
+				message="Tem certeza que deseja excluir este Post?"
 				visible={showConfirm}
 				onCancel={() => setShowConfirm(false)}
 				onConfirm={onDeletePost}
@@ -63,7 +60,7 @@ export default function UserPostItem({post, onDelete}: PostProps) {
 							<FontAwesome name="edit" size={22} color="#FFF" />
 						</TouchableOpacity>
 					</Link>
-					<TouchableOpacity style={styles.botaoContainerExcluir} onPress={showConfirmModal}>
+					<TouchableOpacity style={styles.botaoContainerExcluir} onPress={() => setShowConfirm(true)}>
 						<FontAwesome name="trash" size={22} color="#FFF" />
 					</TouchableOpacity>
 				</View>

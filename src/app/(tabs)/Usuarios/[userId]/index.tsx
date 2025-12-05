@@ -1,11 +1,15 @@
+import DeleteModal from "@/src/components/DeleteModal";
+import { CreateUserBody } from "@/src/services/types/Users.type";
 import usersService from "@/src/services/users.service";
 import { Picker } from "@react-native-picker/picker";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import Toast from "react-native-toast-message";
 
-export default function UserDetailB() {
-const { userId } = useLocalSearchParams<{userId: string}>()
+export default function UserDetail() {
+	const [showConfirm, setShowConfirm] = useState(false);
+	const { userId } = useLocalSearchParams<{userId: string}>()
 	const [name, setName] = useState('')
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
@@ -25,11 +29,56 @@ const { userId } = useLocalSearchParams<{userId: string}>()
 	},[])
 
 	const onSubmit = async () => {
-		Alert.alert('Desenvolver')
+		const userData: CreateUserBody = {
+			nome: name,
+			email,
+			senha: password,
+			tipo: type
+		}
+
+		const response = await usersService.updateUser(userId, userData)
+		
+		if(response) {
+			Toast.show({
+				type: "success",
+				text1: `Usuário atualizado com sucesso`,
+				text1Style: {
+					fontSize: 15
+				}
+			})
+
+			router.back()
+		}
+	}
+
+	async function onDelete() {
+		try {
+			await usersService.deleteUser(userId)
+
+			Toast.show({
+				type: "success",
+				text1: `Usuário excluído com sucesso`,
+				text1Style: {
+					fontSize: 15
+				}
+			})
+
+			router.back()
+
+		} catch (err) {
+
+		}
 	}
 
 	return (
 		<ScrollView contentContainerStyle={styles.container}>
+			<DeleteModal
+				message="Tem certeza que deseja excluir este Usuário?"
+				visible={showConfirm}
+				onCancel={() => setShowConfirm(false)}
+				onConfirm={onDelete}
+			/>
+
 			<View style={styles.form}>
 				<Text style={styles.title}>Editar Usuário</Text>
 
@@ -68,10 +117,13 @@ const { userId } = useLocalSearchParams<{userId: string}>()
 				<TouchableOpacity style={styles.button} onPress={onSubmit}>
 					<Text style={styles.buttonText}>Salvar</Text>
 				</TouchableOpacity>
+
+				<TouchableOpacity style={styles.deleteButton} onPress={() => setShowConfirm(true)}>
+					<Text style={styles.deleteButtonText}>Excluir Usuário</Text>
+				</TouchableOpacity>
 			</View>
 		</ScrollView>
 	)
-
 }
 
 const styles = StyleSheet.create({
@@ -121,5 +173,19 @@ const styles = StyleSheet.create({
 		color: "#FFF",
 		fontSize: 16,
 		fontWeight: "700",
+	},
+	deleteButton: {
+		marginTop: 16,
+		backgroundColor: '#B91C1C', // vermelho escuro elegante
+		padding: 14,
+		borderRadius: 8,
+		alignItems: 'center',
+		borderWidth: 1,
+		borderColor: '#EF4444',
+	},
+	deleteButtonText: {
+		color: '#FFF',
+		fontWeight: 'bold',
+		fontSize: 16,
 	},
 })

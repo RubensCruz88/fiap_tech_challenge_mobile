@@ -4,39 +4,65 @@ import { UserModel } from "../models/Usuario/user.model";
 import { CreateUserBody, UserDetailResponse, UserListResponse } from "./types/Users.type";
 
 class UserService {
-    async getUsers() {
-        const response: AxiosResponse<UserListResponse[]> = await api.get(`usuarios`)
+	async getUsers() {
+		const response: AxiosResponse<UserListResponse[]> = await api.get(`usuarios`)
 
-        if(response.data) {
-            const formattedData = response.data.map(user => new UserModel(user))
+		if(response.data) {
+			const formattedData = response.data.map(user => new UserModel(user))
 
-            return formattedData
-        }
+			return formattedData
+		}
 
-        return []
-    }
+		return []
+	}
 
-    async getUserData(userId: string) {
-        const response: AxiosResponse<UserListResponse> = await api.get(`usuarios/${userId}`)
+	async getUserData(userId: string) {
+		const response: AxiosResponse<UserListResponse> = await api.get(`usuarios/${userId}`)
 
-        if(response.data) {
-            const formattedData = new UserModel(response.data)
+		if(response.data) {
+			const formattedData = new UserModel(response.data)
 
-            return formattedData
-        }
+			return formattedData
+		}
 
-        return null
-    }
+		return null
+	}
 
-    async createUser(userData: CreateUserBody) {
-            const response: AxiosResponse<UserDetailResponse> = await api.post('usuarios',userData)
+	async createUser(userData: CreateUserBody) {
+			const response: AxiosResponse<UserDetailResponse> = await api.post('usuarios',userData)
 
-            if(response.data) {
-                return new UserModel(response.data)
-            }
+			if(response.data) {
+				return new UserModel(response.data)
+			}
 
-            return null
-    }
+			return null
+	}
+
+	async updateUser(userId: string, userData: CreateUserBody) {
+		try {
+			const response: AxiosResponse<UserDetailResponse> = await api.put(`usuarios/${userId}`,userData)
+
+			if(response?.data) {
+				return new UserModel(response.data)
+			}
+
+			return null
+
+		} catch (err) {
+			console.log(err)
+		}
+	}
+
+	async deleteUser(userId: string) {
+		try {
+			await api.delete(`usuarios/${userId}`)
+
+			return null
+
+		} catch (err) {
+			console.log(err)
+		}
+	}
 }
 
 export default new UserService();
