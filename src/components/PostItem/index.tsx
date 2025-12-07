@@ -26,7 +26,7 @@ export default function PostItem({post}: PostProps) {
 				</Text>
 			</View>
 			
-			<Link href={{pathname: "./(home)/[postId]", params: {postId: post.id}}} asChild>
+			<Link href={{pathname: "/(tabs)/(home)/[postId]", params: {postId: post.id}}} asChild>
 				<TouchableOpacity style={styles.botaoContainer}>
 					<Text style={styles.botaoTexto}>Ler Post</Text>
 				</TouchableOpacity>

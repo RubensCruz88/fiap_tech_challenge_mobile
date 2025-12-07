@@ -1,16 +1,17 @@
 import PostForm from "@/src/components/PostForm";
+import { useLocalSearchParams } from "expo-router";
 import { ScrollView, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function NovoPost() {
-
-	return (
+export default function PostEdit() {
+	const params = useLocalSearchParams<{postId: string}>();
+    return (
 		<SafeAreaView style={styles.container}>
-			<ScrollView contentContainerStyle={styles.scroll}>
-				<PostForm />
-			</ScrollView>
-		</SafeAreaView>
-	);
+				<ScrollView contentContainerStyle={styles.scroll}>
+					<PostForm postId={params.postId}/>
+				</ScrollView>
+			</SafeAreaView>
+	)
 }
 
 const styles = StyleSheet.create({

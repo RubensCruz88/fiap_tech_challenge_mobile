@@ -2,9 +2,10 @@ import { PostListModel } from "@/src/models/Post/postList.model";
 import postsService from "@/src/services/posts.service";
 import { dateToString } from "@/src/utils/dateFnsUtils";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import Toast from "react-native-toast-message";
 import DeleteModal from "../DeleteModal";
 
 interface PostProps {
@@ -26,9 +27,25 @@ export default function UserPostItem({post, onDelete}: PostProps) {
 			setShowConfirm(false)
 			onDelete()
 
+			Toast.show({
+				type: "success",
+				text1: `Post excluído com sucesso`,
+				text1Style: {
+					fontSize: 15
+				}
+			})
+
+
 		} catch (err) {
 			console.log(err)
 		}
+	}
+
+	function onEditPost() {
+		router.push({
+			pathname: '/(tabs)/MeusPosts/[postId]',
+			params: {postId: post.id}
+		})
 	}
 
 	return(
@@ -55,11 +72,9 @@ export default function UserPostItem({post, onDelete}: PostProps) {
 					<TouchableOpacity style={styles.botaoContainerLer} onPress={onShowPost}>
 						<FontAwesome name="book" size={22} color="#FFF" />
 					</TouchableOpacity>
-					<Link href={{pathname: "./(home)/[postId]", params: {postId: post.id}}} asChild>
-						<TouchableOpacity style={styles.botaoContainerEditar}>
-							<FontAwesome name="edit" size={22} color="#FFF" />
-						</TouchableOpacity>
-					</Link>
+					<TouchableOpacity style={styles.botaoContainerEditar} onPress={onEditPost}>
+						<FontAwesome name="edit" size={22} color="#FFF" />
+					</TouchableOpacity>
 					<TouchableOpacity style={styles.botaoContainerExcluir} onPress={() => setShowConfirm(true)}>
 						<FontAwesome name="trash" size={22} color="#FFF" />
 					</TouchableOpacity>

@@ -9,7 +9,6 @@ export default function PostDetail() {
 	const params = useLocalSearchParams<{postId: string}>();
 	const [post, setPost] = useState<PostDetailModel | null>(null)
 
-  
   useEffect(() => {
 		fetchData()
 	},[])

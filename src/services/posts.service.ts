@@ -2,8 +2,7 @@ import api from "@/src/api/axios";
 import { AxiosResponse } from "axios";
 import { PostDetailModel } from "../models/Post/postDetail.model";
 import { PostListModel } from "../models/Post/postList.model";
-import { CreatePostBody, PostDetailResponse, PostListResponse } from "./types/PostsResponse";
-
+import { PostDetailResponse, PostListResponse, SavePostBody } from "./types/PostsResponse";
 
 class PostService {
 	async getPosts() {
@@ -40,13 +39,24 @@ class PostService {
 		return null
 	}
 
-	async addPost(postData: CreatePostBody) {
-		const response: AxiosResponse<PostDetailResponse> = await api.post(`posts`,postData)
+	async savePost(postData: SavePostBody) {
+		let response: AxiosResponse<PostDetailResponse>
+
+		const postBody = {
+			titulo: postData.titulo,
+			conteudo: postData.conteudo
+		}
+
+		if(postData.id) {
+			response = await api.put(`posts/${postData.id}`,postBody)
+		} else {
+			response = await api.post(`posts`,postBody)
+		}
 
 		if(response.data) {
 			return new PostDetailModel(response.data)
 		}
-
+	
 		return null
 
 	}
