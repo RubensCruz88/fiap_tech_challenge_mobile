@@ -34,18 +34,23 @@ export default function PostForm({ postId }: PostFormProps) {
 	}
 
 	async function onSavePost() {
-		const response = await postsService.savePost({id: postId,titulo, conteudo})
-
-		if(response) {
+		try {
+			const response = await postsService.savePost({id: postId,titulo, conteudo})
+	
+			if(response) {
+				Toast.show({
+					type: "success",
+					text1: `Post ${novoPost ? 'criado' : 'atualizado'} com sucesso`
+				})
+	
+				router.back()
+			}
+		} catch (err: any) {
 			Toast.show({
-				type: "success",
-				text1: `Post ${novoPost ? 'criado' : 'atualizado'} com sucesso`,
-				text1Style: {
-					fontSize: 15
-				}
+				type: "error",
+				text1: `Erro ao ${novoPost ? 'criar' : 'atualizar'} post`,
+				text2: err.message,
 			})
-
-			router.back()
 		}
 	}
 

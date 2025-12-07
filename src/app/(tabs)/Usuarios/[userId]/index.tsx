@@ -41,10 +41,7 @@ export default function UserDetail() {
 		if(response) {
 			Toast.show({
 				type: "success",
-				text1: `Usuário atualizado com sucesso`,
-				text1Style: {
-					fontSize: 15
-				}
+				text1: `Usuário atualizado com sucesso`
 			})
 
 			router.back()
@@ -57,10 +54,7 @@ export default function UserDetail() {
 
 			Toast.show({
 				type: "success",
-				text1: `Usuário excluído com sucesso`,
-				text1Style: {
-					fontSize: 15
-				}
+				text1: `Usuário excluído com sucesso`
 			})
 
 			router.back()

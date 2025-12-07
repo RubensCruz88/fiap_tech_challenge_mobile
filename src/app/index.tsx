@@ -17,10 +17,7 @@ export default function Login() {
        if(!retorno) {
             Toast.show({
                 type: "error",
-                text1: 'Usuário ou senha inválidos',
-                text1Style: {
-                    fontSize: 15
-                }
+                text1: 'Usuário ou senha inválidos'
             })
        }
     }

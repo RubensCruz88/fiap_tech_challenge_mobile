@@ -29,10 +29,7 @@ export default function UserPostItem({post, onDelete}: PostProps) {
 
 			Toast.show({
 				type: "success",
-				text1: `Post excluído com sucesso`,
-				text1Style: {
-					fontSize: 15
-				}
+				text1: `Post excluído com sucesso`
 			})
 
 

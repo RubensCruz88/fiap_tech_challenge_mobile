@@ -1,6 +1,7 @@
 import { Stack } from "expo-router";
 import Toast from "react-native-toast-message";
 import { AuthProvider, useAuth } from "../providers/authProvider";
+import { toastConfig } from "../styles/toastConfig";
 
 const InitialLayout = () => {
     const { authState } = useAuth()
@@ -23,7 +24,7 @@ export default function Layout() {
     return (
         <AuthProvider>
             <InitialLayout />
-            <Toast />
+            <Toast config={toastConfig}/>
         </AuthProvider>        
     )
 }

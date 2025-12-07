@@ -25,21 +25,16 @@ export default function NovoUsuario() {
 
 			Toast.show({
 				type: "success",
-				text1: `Usuário ${name} criado com sucesso`,
-				text1Style: {
-					fontSize: 15
-				}
+				text1: `Usuário ${name} criado com sucesso`
 			})
 
 			navigation.goBack()
 
-		} catch (err) {
+		} catch (err: any) {
 			Toast.show({
 				type: "error",
 				text1: `Erro ao criar usuário`,
-				text1Style: {
-					fontSize: 15
-				}
+				text2: err.message,
 			})
 		}
 	}
