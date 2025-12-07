@@ -3,12 +3,22 @@ import { PostListModel } from "@/src/models/Post/postList.model";
 import PostService from '@/src/services/posts.service';
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { router, useFocusEffect } from "expo-router";
-import { useCallback, useState } from "react";
-import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
+import { useCallback, useMemo, useState } from "react";
+import { FlatList, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { useDebounce } from "use-debounce";
 
 export default function MeusPosts() {
 	const [posts, setPosts] = useState<PostListModel[]>([])
+	const [busca, setBusca] = useState('')
+	const [buscaComDebounce] = useDebounce(busca,1000)
+
+	const postsFiltrados = useMemo(() => {
+		return posts.filter( post => {
+			return post.titulo.toLowerCase().includes(buscaComDebounce)
+		})
+	},[buscaComDebounce,posts])
+
 
 	useFocusEffect(
 		useCallback(() => {
@@ -38,11 +48,21 @@ export default function MeusPosts() {
 	return(
 		<SafeAreaProvider>
 			<SafeAreaView style={styles.container}>
+				<View style={styles.searchContainer}>
+					<FontAwesome name="search" size={18} color="#4F6737" />
+					<TextInput
+						placeholder="Buscar post..."
+						value={busca}
+						onChangeText={setBusca}
+						style={styles.searchInput}
+						placeholderTextColor="#4F6737"
+					/>
+				</View>
 				<TouchableOpacity style={styles.fab} onPress={onAddPost}>
 					<FontAwesome name="plus" size={22} color="#fff" />
 				</TouchableOpacity>
 				<FlatList 
-					data={posts}
+					data={postsFiltrados}
 					keyExtractor={(post) => post.id}
 					renderItem={({item}) => <UserPostItem post={item} onDelete={onDeletePost}></UserPostItem>}
 					contentContainerStyle={styles.listContainer}
@@ -53,6 +73,20 @@ export default function MeusPosts() {
 }
 
 const styles = StyleSheet.create({
+	searchContainer: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		backgroundColor: '#DCE9C9',
+		borderRadius: 12,
+		paddingHorizontal: 14,
+		height: 46,
+		gap: 10,
+	},
+	searchInput: {
+		flex: 1,
+		color: '#2F4F2F',
+		fontSize: 16,
+	},
 	fab: {
         position: "absolute",
         bottom: 20,

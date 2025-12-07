@@ -18,7 +18,6 @@ export default function Home() {
 		})
 	},[buscaComDebounce,posts])
 
-
 	useEffect(() => {
         fetchData()
     },[])
