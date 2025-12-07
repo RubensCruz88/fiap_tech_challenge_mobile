@@ -15,13 +15,15 @@ export default function RootLayout() {
             title: "Home", 
             tabBarIcon: ({color}) => <FontAwesome size={28} name="home" color={color} />
           }}/>
-        <Tabs.Screen 
-          name="MeusPosts"
-          options={{
-            title: "Meus Posts",
-            tabBarIcon: ({color}) => <FontAwesome size={28} name="file-text" color={color} />
-          }}
-        />
+        <Tabs.Protected guard={authState.tipo !== 'aluno'} >
+          <Tabs.Screen 
+            name="MeusPosts"
+            options={{
+              title: "Meus Posts",
+              tabBarIcon: ({color}) => <FontAwesome size={28} name="file-text" color={color} />
+            }}
+          />
+        </Tabs.Protected>
         <Tabs.Protected guard={authState.tipo !== 'aluno'} >
           <Tabs.Screen 
             name="Usuarios"
