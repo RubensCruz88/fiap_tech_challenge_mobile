@@ -51,6 +51,7 @@ export default function Home() {
                     data={postsFiltrados}
                     keyExtractor={(post) => post.id}
                     renderItem={({item}) => <PostItem post={item}></PostItem>}
+					showsVerticalScrollIndicator={false}
 					contentContainerStyle={styles.listContainer}
                 />
             </SafeAreaView>
@@ -66,8 +67,8 @@ const styles = StyleSheet.create({
 		backgroundColor: '#B5D195'
 	},
 	listContainer: {
-		flex: 1,
 		gap: 20,
+		paddingBottom: 20
 	},
 	searchContainer: {
 		flexDirection: 'row',
