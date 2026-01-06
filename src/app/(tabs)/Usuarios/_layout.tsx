@@ -15,6 +15,7 @@ export default function Layout() {
 			<Stack.Screen
 				name="[userId]"
 				options={({ navigation }) => ({
+					headerTitle: "",
 					headerLeft: () => (
 						<TouchableOpacity
 							onPress={() => navigation.goBack()}
@@ -28,6 +29,7 @@ export default function Layout() {
 			<Stack.Screen
 				name="Novo"
 				options={({ navigation }) => ({
+					headerTitle: "",
 					headerLeft: () => (
 						<TouchableOpacity
 							onPress={() => navigation.goBack()}

@@ -5,6 +5,7 @@ export default function Layout() {
 	return (
 		<Stack
 			screenOptions={({ navigation }) => ({
+				headerTitle: "",
 				headerLeft: () => (
 					<TouchableOpacity
 						onPress={() => navigation.goBack()}
