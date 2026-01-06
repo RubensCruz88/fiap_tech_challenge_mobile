@@ -2,14 +2,43 @@ import { PostListModel } from "@/src/models/Post/postList.model";
 import { dateToString } from "@/src/utils/dateFnsUtils";
 import { Link } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useState } from "react";
+import DeleteModal from "@/src/components/DeleteModal";
+import postsService from "@/src/services/posts.service";
+import Toast from "react-native-toast-message";
+import { useAuth } from "@/src/providers/authProvider";
 
 interface PostProps {
-    post: PostListModel
+	post: PostListModel;
+	onDelete?: () => void;
 }
 
-export default function PostItem({post}: PostProps) {
+export default function PostItem({post, onDelete}: PostProps) {
+	const { authState } = useAuth();
+	const [showConfirm, setShowConfirm] = useState(false);
+	async function handleDelete() {
+		try {
+			await postsService.deletePost(post.id);
+
+			setShowConfirm(false);
+
+			Toast.show({ type: "success", text1: "Post excluído com sucesso" });
+
+			if (onDelete) onDelete();
+		} catch (err) {
+			console.log(err);
+		}
+	}
+
 	return(
-		<View style={styles.card}>
+		<>
+			<DeleteModal
+				message="Tem certeza que deseja excluir este Post?"
+				visible={showConfirm}
+				onCancel={() => setShowConfirm(false)}
+				onConfirm={handleDelete}
+			/>
+			<View style={styles.card}>
 			<View style={styles.cabecalho}>
 				<Text style={styles.cabecalhoTitulo}>{post.titulo}</Text>
 			</View>
@@ -26,11 +55,18 @@ export default function PostItem({post}: PostProps) {
 				</Text>
 			</View>
 			
-			<Link href={{pathname: "/(tabs)/(home)/[postId]", params: {postId: post.id}}} asChild>
-				<TouchableOpacity style={styles.botaoContainer}>
-					<Text style={styles.botaoTexto}>Ler Post</Text>
-				</TouchableOpacity>
-			</Link>
+			<View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+				<Link href={{pathname: "/(tabs)/(home)/[postId]", params: {postId: post.id}}} asChild>
+					<TouchableOpacity style={styles.botaoContainer}>
+						<Text style={styles.botaoTexto}>Ler Post</Text>
+					</TouchableOpacity>
+				</Link>
+				{authState.tipo === 'admin' && (
+					<TouchableOpacity style={[styles.botaoContainer, { borderColor: '#C62828' }]} onPress={() => setShowConfirm(true)}>
+						<Text style={[styles.botaoTexto, { color: '#C62828' }]}>Excluir</Text>
+					</TouchableOpacity>
+				)}
+			</View>
 		</View>
     )
 }
