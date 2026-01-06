@@ -15,6 +15,7 @@ interface AuthContextType {
 	authState: AuthState;
 	logIn: (email: string, password: string) => Promise<boolean>;
 	logOut: () => Promise<void>;
+	loading: boolean;
 }
 
 const TOKEN_KEY = "eduPost";
@@ -100,7 +101,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	};
 
 	return (
-		<AuthContext.Provider value={{ authState, logIn, logOut }}>
+		<AuthContext.Provider value={{ authState, logIn, logOut, loading }}>
 			{children}
 		</AuthContext.Provider>
 	);
