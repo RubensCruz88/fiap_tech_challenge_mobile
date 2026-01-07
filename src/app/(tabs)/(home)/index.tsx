@@ -52,9 +52,7 @@ export default function Home() {
 				<FlatList
 					data={postsFiltrados}
 					keyExtractor={(post) => post.id}
-					renderItem={({ item }) => (
-						<PostItem post={item} onDelete={fetchData}></PostItem>
-					)}
+					renderItem={({ item }) => <PostItem post={item}></PostItem>}
 					showsVerticalScrollIndicator={false}
 					contentContainerStyle={styles.listContainer}
 				/>

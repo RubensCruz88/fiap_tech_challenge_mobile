@@ -36,7 +36,7 @@ export default function UserDetail() {
 			}
 		}
 		loadData();
-	}, []);
+	}, [userId]);
 
 	const onSubmit = async () => {
 		const userData: CreateUserBody = {
@@ -88,7 +88,7 @@ export default function UserDetail() {
 			});
 
 			router.back();
-		} catch (err) {}
+		} catch {}
 	}
 
 	return (

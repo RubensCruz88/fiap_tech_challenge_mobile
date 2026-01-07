@@ -2,71 +2,42 @@ import { PostListModel } from "@/src/models/Post/postList.model";
 import { dateToString } from "@/src/utils/dateFnsUtils";
 import { Link } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { useState } from "react";
-import DeleteModal from "@/src/components/DeleteModal";
-import postsService from "@/src/services/posts.service";
-import Toast from "react-native-toast-message";
 
 interface PostProps {
 	post: PostListModel;
-	onDelete?: () => void;
 }
 
-export default function PostItem({ post, onDelete }: PostProps) {
-	const [showConfirm, setShowConfirm] = useState(false);
-
-	async function handleDelete() {
-		try {
-			await postsService.deletePost(post.id);
-
-			setShowConfirm(false);
-
-			Toast.show({ type: "success", text1: "Post excluído com sucesso" });
-
-			if (onDelete) onDelete();
-		} catch (err) {
-			console.log(err);
-		}
-	}
-
+export default function PostItem({ post }: PostProps) {
 	return (
-		<>
-			<DeleteModal
-				message="Tem certeza que deseja excluir este Post?"
-				visible={showConfirm}
-				onCancel={() => setShowConfirm(false)}
-				onConfirm={handleDelete}
-			/>
-			<View style={styles.card}>
-				<View style={styles.cabecalho}>
-					<Text style={styles.cabecalhoTitulo}>{post.titulo}</Text>
-				</View>
-
-				<View style={styles.autorContainer}>
-					<Text style={styles.autorIcone}>✍️</Text>
-					<Text style={styles.autorNome}>{post.autor}</Text>
-				</View>
-
-				<View style={styles.criadoEmContainer}>
-					<Text style={styles.criadoEmTitulo}>Criado em</Text>
-					<Text style={styles.criadoEmData}>
-						{dateToString(post.createdAt, "dd 'de' MMMM 'de' yyyy 'as' HH:mm")}
-					</Text>
-				</View>
-
-				<Link
-					href={{
-						pathname: "/(tabs)/(home)/[postId]",
-						params: { postId: post.id },
-					}}
-					asChild
-				>
-					<TouchableOpacity style={styles.botaoContainer}>
-						<Text style={styles.botaoTexto}>Ler Post</Text>
-					</TouchableOpacity>
-				</Link>
+		<View style={styles.card}>
+			<View style={styles.cabecalho}>
+				<Text style={styles.cabecalhoTitulo}>{post.titulo}</Text>
 			</View>
-		</>
+
+			<View style={styles.autorContainer}>
+				<Text style={styles.autorIcone}>✍️</Text>
+				<Text style={styles.autorNome}>{post.autor}</Text>
+			</View>
+
+			<View style={styles.criadoEmContainer}>
+				<Text style={styles.criadoEmTitulo}>Criado em</Text>
+				<Text style={styles.criadoEmData}>
+					{dateToString(post.createdAt, "dd 'de' MMMM 'de' yyyy 'as' HH:mm")}
+				</Text>
+			</View>
+
+			<Link
+				href={{
+					pathname: "/(tabs)/(home)/[postId]",
+					params: { postId: post.id },
+				}}
+				asChild
+			>
+				<TouchableOpacity style={styles.botaoContainer}>
+					<Text style={styles.botaoTexto}>Ler Post</Text>
+				</TouchableOpacity>
+			</Link>
+		</View>
 	);
 }
 const styles = StyleSheet.create({

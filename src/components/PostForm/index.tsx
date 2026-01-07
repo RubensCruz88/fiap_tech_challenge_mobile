@@ -1,6 +1,6 @@
 import postsService from "@/src/services/posts.service";
 import { router } from "expo-router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
 	StyleSheet,
 	Text,
@@ -27,13 +27,7 @@ export default function PostForm({ postId, onSaved }: PostFormProps) {
 
 	const { authState } = useAuth();
 
-	useEffect(() => {
-		if (!novoPost) {
-			loadPost();
-		}
-	}, []);
-
-	async function loadPost() {
+	const loadPost = useCallback(async () => {
 		try {
 			const response = await postsService.getPostDetail(postId!);
 
@@ -46,8 +40,14 @@ export default function PostForm({ postId, onSaved }: PostFormProps) {
 					setTimeInput(format(d, "HH:mm"));
 				}
 			}
-		} catch (err) {}
-	}
+		} catch {}
+	}, [postId]);
+
+	useEffect(() => {
+		if (!novoPost) {
+			loadPost();
+		}
+	}, [loadPost, novoPost]);
 
 	async function onSavePost() {
 		try {

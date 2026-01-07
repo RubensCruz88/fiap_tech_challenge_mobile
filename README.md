@@ -38,8 +38,8 @@ Observação: algumas regras de edição/exclusão podem depender do back-end (p
 | Ver lista de posts      |    ✅ |                              ✅ |                 ✅ |
 | Ler post                |    ✅ |                              ✅ |                 ✅ |
 | Criar post              |    ❌ |                              ✅ |                 ✅ |
-| Editar post             |    ❌ | ✅ (conforme regra do back-end) | ✅ (qualquer post) |
-| Excluir post            |    ❌ | ✅ (conforme regra do back-end) | ✅ (qualquer post) |
+| Editar post             |    ❌ |                              ✅ |                 ✅ |
+| Excluir post            |    ❌ |                              ✅ |                 ✅ |
 | CRUD Professores/Alunos |    ❌ |                              ❌ |                 ✅ |
 
 ## Telas (GUI)
@@ -95,11 +95,11 @@ Arquivos relevantes:
 2. Página de leitura de post ✅
 3. Página de criação de postagens ✅
 4. Página de edição de postagens ✅
-5. Página de criação de professores ✅ _(_se aplicável via telas de Usuários_)_
+5. Página de criação de professores ✅ _(\_se aplicável via telas de Usuários_)\_
 6. Página de edição de professores ✅
 7. Página de listagem de professores ✅
 8. Requisitos 5/6/7 para estudantes ✅
-9. Página administrativa de posts ✅ _(_Admin gerencia via detalhe do post_)_
+9. Página administrativa de posts ✅ _(\_Admin gerencia via detalhe do post_)\_
 10. Autenticação e autorização ✅
 
 ### Requisitos técnicos
@@ -178,30 +178,3 @@ Exemplo:
 
 - Local: `http://localhost:3000`
 - Rede (device físico): `http://SEU_IP:3000`
-
-### Observações importantes
-
-- Em atualização de post, a API pode rejeitar campos imutáveis (ex.: `createdAt`). O app evita enviar `createdAt` no update.
-
-## Troubleshooting
-
-### “Text strings must be rendered within a `<Text>` component”
-
-Isso normalmente acontece quando existe uma string solta no JSX (ex.: `{" "}`) fora de um `<Text>`.
-Remova a string ou envolva em `<Text>`.
-
-### Erros estranhos após alterações / bundle inconsistente
-
-Rode com cache limpo:
-
-```bash
-npx expo start --clear
-```
-
-Se persistir:
-
-```bash
-rm -rf node_modules
-npm install
-npx expo start --clear
-```
