@@ -6,16 +6,15 @@ import { useState } from "react";
 import DeleteModal from "@/src/components/DeleteModal";
 import postsService from "@/src/services/posts.service";
 import Toast from "react-native-toast-message";
-import { useAuth } from "@/src/providers/authProvider";
 
 interface PostProps {
 	post: PostListModel;
 	onDelete?: () => void;
 }
 
-export default function PostItem({post, onDelete}: PostProps) {
-	const { authState } = useAuth();
+export default function PostItem({ post, onDelete }: PostProps) {
 	const [showConfirm, setShowConfirm] = useState(false);
+
 	async function handleDelete() {
 		try {
 			await postsService.deletePost(post.id);
@@ -30,7 +29,7 @@ export default function PostItem({post, onDelete}: PostProps) {
 		}
 	}
 
-	return(
+	return (
 		<>
 			<DeleteModal
 				message="Tem certeza que deseja excluir este Post?"
@@ -39,38 +38,37 @@ export default function PostItem({post, onDelete}: PostProps) {
 				onConfirm={handleDelete}
 			/>
 			<View style={styles.card}>
-			<View style={styles.cabecalho}>
-				<Text style={styles.cabecalhoTitulo}>{post.titulo}</Text>
-			</View>
-		
-			<View style={styles.autorContainer}>
-				<Text style={styles.autorIcone}>✍️</Text>
-				<Text style={styles.autorNome}>{post.autor}</Text>
-			</View>
-		
-			<View style={styles.criadoEmContainer}>
-				<Text style={styles.criadoEmTitulo}>Criado em</Text>
-				<Text style={styles.criadoEmData}>
-					{dateToString(post.createdAt,"dd 'de' MMMM 'de' yyyy 'as' HH:mm")}
-				</Text>
-			</View>
-			
-			<View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-				<Link href={{pathname: "/(tabs)/(home)/[postId]", params: {postId: post.id}}} asChild>
+				<View style={styles.cabecalho}>
+					<Text style={styles.cabecalhoTitulo}>{post.titulo}</Text>
+				</View>
+
+				<View style={styles.autorContainer}>
+					<Text style={styles.autorIcone}>✍️</Text>
+					<Text style={styles.autorNome}>{post.autor}</Text>
+				</View>
+
+				<View style={styles.criadoEmContainer}>
+					<Text style={styles.criadoEmTitulo}>Criado em</Text>
+					<Text style={styles.criadoEmData}>
+						{dateToString(post.createdAt, "dd 'de' MMMM 'de' yyyy 'as' HH:mm")}
+					</Text>
+				</View>
+
+				<Link
+					href={{
+						pathname: "/(tabs)/(home)/[postId]",
+						params: { postId: post.id },
+					}}
+					asChild
+				>
 					<TouchableOpacity style={styles.botaoContainer}>
 						<Text style={styles.botaoTexto}>Ler Post</Text>
 					</TouchableOpacity>
 				</Link>
-				{authState.tipo === 'admin' && (
-					<TouchableOpacity style={[styles.botaoContainer, { borderColor: '#C62828' }]} onPress={() => setShowConfirm(true)}>
-						<Text style={[styles.botaoTexto, { color: '#C62828' }]}>Excluir</Text>
-					</TouchableOpacity>
-				)}
 			</View>
-		</View>
-    )
+		</>
+	);
 }
-
 const styles = StyleSheet.create({
 	card: {
 		backgroundColor: "#fff",
@@ -84,6 +82,7 @@ const styles = StyleSheet.create({
 		shadowRadius: 4,
 		shadowOffset: { width: 0, height: 2 },
 	},
+
 	cabecalho: {
 		flexDirection: "row",
 		justifyContent: "space-between",
@@ -144,4 +143,4 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 		fontSize: 16,
 	},
-})
+});

@@ -15,9 +15,10 @@ import { format } from "date-fns";
 
 type PostFormProps = {
 	postId?: string;
+	onSaved?: () => void;
 };
 
-export default function PostForm({ postId }: PostFormProps) {
+export default function PostForm({ postId, onSaved }: PostFormProps) {
 	const [titulo, setTitulo] = useState("");
 	const [conteudo, setConteudo] = useState("");
 	const [dateInput, setDateInput] = useState("");
@@ -50,9 +51,15 @@ export default function PostForm({ postId }: PostFormProps) {
 
 	async function onSavePost() {
 		try {
-			let payload: any = { id: postId, titulo, conteudo };
+			let payload: any = { titulo, conteudo };
 
-			if (authState.tipo === "admin" && dateInput && timeInput) {
+			// Only include id when updating (not creating)
+			if (!novoPost) {
+				payload.id = postId;
+			}
+
+			// Only allow admins to set custom createdAt on NEW posts
+			if (authState.tipo === "admin" && novoPost && dateInput && timeInput) {
 				const combined = new Date(`${dateInput}T${timeInput}:00`);
 				payload.createdAt = combined.toISOString();
 			}
@@ -65,7 +72,11 @@ export default function PostForm({ postId }: PostFormProps) {
 					text1: `Post ${novoPost ? "criado" : "atualizado"} com sucesso`,
 				});
 
-				router.back();
+				if (onSaved) {
+					onSaved();
+				} else {
+					router.back();
+				}
 			}
 		} catch (err: any) {
 			Toast.show({
