@@ -19,4 +19,5 @@ export interface SavePostBody {
 	id?: string;
 	titulo: string;
 	conteudo: string;
+	createdAt?: string;
 }

@@ -1,56 +1,89 @@
 import postsService from "@/src/services/posts.service";
 import { router } from "expo-router";
-import { useEffect, useState } from "react";
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { useCallback, useEffect, useState } from "react";
+import {
+	StyleSheet,
+	Text,
+	TextInput,
+	TouchableOpacity,
+	View,
+} from "react-native";
 import Toast from "react-native-toast-message";
+import { useAuth } from "@/src/providers/authProvider";
+import { jsonToDate } from "@/src/utils/dateFnsUtils";
+import { format } from "date-fns";
 
 type PostFormProps = {
-  postId?: string;
+	postId?: string;
+	onSaved?: () => void;
 };
 
-export default function PostForm({ postId }: PostFormProps) {
-	const [titulo, setTitulo] = useState('')
-	const [conteudo, setConteudo] = useState('')
+export default function PostForm({ postId, onSaved }: PostFormProps) {
+	const [titulo, setTitulo] = useState("");
+	const [conteudo, setConteudo] = useState("");
+	const [dateInput, setDateInput] = useState("");
+	const [timeInput, setTimeInput] = useState("");
 	const novoPost = !postId;
+
+	const { authState } = useAuth();
+
+	const loadPost = useCallback(async () => {
+		try {
+			const response = await postsService.getPostDetail(postId!);
+
+			if (response) {
+				setTitulo(response.titulo);
+				setConteudo(response.conteudo);
+				if (response.createdAt) {
+					const d = jsonToDate(response.createdAt);
+					setDateInput(format(d, "yyyy-MM-dd"));
+					setTimeInput(format(d, "HH:mm"));
+				}
+			}
+		} catch {}
+	}, [postId]);
 
 	useEffect(() => {
 		if (!novoPost) {
 			loadPost();
 		}
-	}, []);
-
-	async function loadPost() {
-		try {
-			const response = await postsService.getPostDetail(postId!);
-
-			if(response) {
-				setTitulo(response.titulo)
-				setConteudo(response.conteudo)
-			}
-
-		} catch (err) {
-
-		}
-	}
+	}, [loadPost, novoPost]);
 
 	async function onSavePost() {
 		try {
-			const response = await postsService.savePost({id: postId,titulo, conteudo})
-	
-			if(response) {
+			let payload: any = { titulo, conteudo };
+
+			// Only include id when updating (not creating)
+			if (!novoPost) {
+				payload.id = postId;
+			}
+
+			// Only allow admins to set custom createdAt on NEW posts
+			if (authState.tipo === "admin" && novoPost && dateInput && timeInput) {
+				const combined = new Date(`${dateInput}T${timeInput}:00`);
+				payload.createdAt = combined.toISOString();
+			}
+
+			const response = await postsService.savePost(payload);
+
+			if (response) {
 				Toast.show({
 					type: "success",
-					text1: `Post ${novoPost ? 'criado' : 'atualizado'} com sucesso`
-				})
-	
-				router.back()
+					text1: `Post ${novoPost ? "criado" : "atualizado"} com sucesso`,
+				});
+
+				if (onSaved) {
+					onSaved();
+				} else {
+					router.back();
+				}
 			}
 		} catch (err: any) {
 			Toast.show({
 				type: "error",
-				text1: `Erro ao ${novoPost ? 'criar' : 'atualizar'} post`,
+				text1: `Erro ao ${novoPost ? "criar" : "atualizar"} post`,
 				text2: err.message,
-			})
+			});
 		}
 	}
 
@@ -73,10 +106,28 @@ export default function PostForm({ postId }: PostFormProps) {
 				multiline
 			/>
 
+			{authState.tipo === "admin" && (
+				<>
+					<Text style={styles.label}>Data (YYYY-MM-DD)</Text>
+					<TextInput
+						value={dateInput}
+						onChangeText={setDateInput}
+						placeholder="2026-01-06"
+						style={styles.input}
+					/>
+					<Text style={styles.label}>Hora (HH:mm)</Text>
+					<TextInput
+						value={timeInput}
+						onChangeText={setTimeInput}
+						placeholder="14:30"
+						style={styles.input}
+					/>
+				</>
+			)}
+
 			<TouchableOpacity style={styles.button} onPress={onSavePost}>
 				<Text style={styles.buttonText}>Salvar Post</Text>
 			</TouchableOpacity>
-
 		</View>
 	);
 }

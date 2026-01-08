@@ -4,37 +4,42 @@ import { Link } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface PostProps {
-    post: PostListModel
+	post: PostListModel;
 }
 
-export default function PostItem({post}: PostProps) {
-	return(
+export default function PostItem({ post }: PostProps) {
+	return (
 		<View style={styles.card}>
 			<View style={styles.cabecalho}>
 				<Text style={styles.cabecalhoTitulo}>{post.titulo}</Text>
 			</View>
-		
+
 			<View style={styles.autorContainer}>
 				<Text style={styles.autorIcone}>✍️</Text>
 				<Text style={styles.autorNome}>{post.autor}</Text>
 			</View>
-		
+
 			<View style={styles.criadoEmContainer}>
 				<Text style={styles.criadoEmTitulo}>Criado em</Text>
 				<Text style={styles.criadoEmData}>
-					{dateToString(post.createdAt,"dd 'de' MMMM 'de' yyyy 'as' HH:mm")}
+					{dateToString(post.createdAt, "dd 'de' MMMM 'de' yyyy 'as' HH:mm")}
 				</Text>
 			</View>
-			
-			<Link href={{pathname: "/(tabs)/(home)/[postId]", params: {postId: post.id}}} asChild>
+
+			<Link
+				href={{
+					pathname: "/(tabs)/(home)/[postId]",
+					params: { postId: post.id },
+				}}
+				asChild
+			>
 				<TouchableOpacity style={styles.botaoContainer}>
 					<Text style={styles.botaoTexto}>Ler Post</Text>
 				</TouchableOpacity>
 			</Link>
 		</View>
-    )
+	);
 }
-
 const styles = StyleSheet.create({
 	card: {
 		backgroundColor: "#fff",
@@ -48,6 +53,7 @@ const styles = StyleSheet.create({
 		shadowRadius: 4,
 		shadowOffset: { width: 0, height: 2 },
 	},
+
 	cabecalho: {
 		flexDirection: "row",
 		justifyContent: "space-between",
@@ -108,4 +114,4 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 		fontSize: 16,
 	},
-})
+});

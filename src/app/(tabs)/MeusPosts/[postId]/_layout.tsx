@@ -1,15 +1,24 @@
 import { Stack } from "expo-router";
+import { Text, TouchableOpacity } from "react-native";
 
 export default function Layout() {
 	return (
 		<Stack
-			screenOptions={{
-				headerTitle: "Voltar",
+			screenOptions={({ navigation }) => ({
+				headerTitle: "",
+				headerLeft: () => (
+					<TouchableOpacity
+						onPress={() => navigation.goBack()}
+						style={{ paddingHorizontal: 16 }}
+					>
+						<Text style={{ color: "#1E8449" }}>Voltar</Text>
+					</TouchableOpacity>
+				),
 				headerStyle: {
-					backgroundColor: '#FFF'
+					backgroundColor: "#FFF",
 				},
-				headerTintColor: '#1E8449'
-			}}
+				headerTintColor: "#1E8449",
+			})}
 		/>
-	)
+	);
 }
